@@ -16,7 +16,7 @@ The primary features:
 Clone the archive on two Linux based laptops:
 
 ```
-    git clone https://github.com/stuartlynne/racedb_qlmuxd.git
+    git clone https://github.com/jujfalus/racedb_qlmuxd.git
 
 ```
 
