@@ -74,7 +74,7 @@ If the PRIMARY host fails, disconnect it from the network. On the STANDBY host:
 Each of these can be started to act as the *PRIMARY* or *STANDBY* container set. 
 
 1. postgresql\_racedb
-2. racedb\_8080
+2. racedb\_8001
 3. qllabels
 4. qlmuxd
 
@@ -95,7 +95,7 @@ If the PRIMARY container stack fails the STANDBY postgresql server is trigged in
 queries from the SECONDARY RaceDB server (which will also start when the trigger to FALLOVER is done.)
 
 
-### racedb\_8080
+### racedb\_8001
 
 This implements *RaceDB*. When started in PRIMARY mode it starts normally.
 
