@@ -1,6 +1,5 @@
-# racedb\_qlmuxd
-## Sun Sep 12 16:29:56 PDT 2021 
-## stuart.lynne@gmail.com
+# racedb\_qlmuxd 
+## Started by Stuart Lynne (stuart.lynne@gmail.com)
 
 The *racedb\_qlmuxd* git archive implements management scripts to support running RaceDB, Postgresql
 and qlmuxd in containers.
@@ -57,7 +56,7 @@ On the *STANDBY* system:
 ### Use
 The docker containers should start automatically when the laptops are turned on.
 
-Registration laptops / chromebooks should connect to port 8080 using the ip address of the PRIMARY host.
+Registration laptops / chromebooks should connect to port 8001 using the ip address of the PRIMARY host.
 
 ### Failure
 
@@ -99,8 +98,7 @@ queries from the SECONDARY RaceDB server (which will also start when the trigger
 
 This implements *RaceDB*. When started in PRIMARY mode it starts normally.
 
-When started in STANDBY mode RaceDB will wait for the FAILOVER signal and for *postgresql* to become available
-and then will start normal operation.
+Currently I have not done any testing with STANDBY and am using as a single server.
 
 
 ### qllabels
@@ -109,7 +107,7 @@ The *qllabels* container set maintains an open *ssh* port (on the internal raced
 Set in RaceDB/systeminfo:
 
 ```
-ssh racedb@qllabels.local QLLABELS.py $1
+ssh -o StrictHostKeyChecking=no racedb@qllabels QLLABELS.py $1
 ```
 
 ### qlmuxd
