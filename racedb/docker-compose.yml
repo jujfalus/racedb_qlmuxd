@@ -4,9 +4,9 @@ services:
     racedb:
         image: esitarski/racedb:latest
         restart: always
-        container_name: racedb_8080_${ROLE}
+        container_name: racedb_8001_primary
         ports:
-            - "8080:8000"
+            - "8001:8000"
         environment:
             - sqlite3_database_fname:/racedb-data/RaceDB.sqlite3
             - PYTHONPATH:/RaceDB
@@ -16,11 +16,11 @@ services:
             - VERBOSITY=1
             #
             # Uncomment to use RFID reader, see ../docker.env
-            #- RFID_READER_HOST=${RFID_READER_HOST_8080}
-            #- RFID_TRANSMIT_POWER=${RFID_TRANSMIT_POWER_8080}
-            #- RFID_RECEIVER_SENSITIVITY=${RFID_RECEIVER_SENSITIVITY_8080}
+            - RFID_READER_HOST=10.16.29.136
+            - RFID_TRANSMIT_POWER=40
+            - RFID_RECEIVER_SENSITIVITY=20
             #- LLRP_SERVER_HOST=
-        hostname: racedb_8080_${ROLE}.local
+        hostname: racedb_8001_primary.local
         networks:
             racedb:
         depends_on:
@@ -35,5 +35,6 @@ services:
             - ../racedb/94-setsuper.sh:/docker-entrypoint-init.d/94-setsuper.sh
             - ../racedb/check.sh:/check.sh
             - ../racedb/simple.py:/simple.py
+            - ../racedb/print_bib.py:/RaceDB/core/print_bib.py
             - ../racedb/index.html:/var/local/www/index.html
 
