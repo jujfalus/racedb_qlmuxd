@@ -227,6 +227,51 @@ def print_bib_tag_label( participant, sponsor_name=None, left_page=True, right_p
 		
 	return pdf.to_bytes()
 
+def print_bib_package_label( participant, copies=2 ):
+	license_holder = participant.license_holder
+	
+	bib = participant.bib
+	name = license_holder.first_last
+	
+	# Use points at the units.
+	page_width = 3.9 * inches_to_points
+	page_height = 2.4 * inches_to_points
+	
+	pdf = PDF( 'L', (page_height, page_width) )
+	pdf.set_author( RaceDBVersion )
+	pdf.set_title( 'Race Bib Number: {}'.format(bib) )
+	pdf.set_subject( 'Bib number and rider info to be printed as a label to apply on package envelope.' )
+	pdf.set_creator( getpass.getuser() )
+	pdf.set_keywords( 'RaceDB CrossMgr Bicycle Racing Software Database Road Time Trial MTB CycloCross RFID' )
+	
+	pdf.add_font('din1451alt', style='', fname=get_font_file('din1451alt G.ttf'), uni=True)
+		
+	margin = min(page_height, page_width) / 18.0
+	sep = margin / 2.5
+	
+	height = page_height - margin*2.0
+	width = page_width - margin*2.0
+	
+	header = Rect( margin, margin, width, height / 18.0 )
+	footer = Rect( margin, page_height - margin - header.height, header.width, header.height )
+	field = Rect( header.x, header.bottom + sep, width, footer.top - header.bottom - sep*2 )
+
+	license_code = license_holder.uci_id or license_holder.license_code
+	
+	
+	font_name = 'din1451alt'
+		
+	for c in range(copies):
+		pdf.add_page()
+
+		pdf.set_font('din1451alt', '', 16) 
+		field.draw_text_to_fit( pdf, bib, Rect.AlignCenter )
+
+		pdf.set_font( font_name )
+		name_width = footer.draw_text_to_fit( pdf, name, Rect.AlignCenter )
+
+	return pdf.to_bytes()
+
 def print_bib_on_rect( bib, license_code=None, name=None, logo=None, widthInches=5.9, heightInches=3.9, copies=1, onePage=False ):
 	page_width = widthInches * inches_to_points
 	page_height = heightInches * inches_to_points
@@ -260,7 +305,7 @@ def print_bib_on_rect( bib, license_code=None, name=None, logo=None, widthInches
 		field = Rect( margin, margin+page_y, width, height )
 		field.draw_text_to_fit( pdf, bib, Rect.AlignCenter|Rect.AlignMiddle )
 		
-		pdf.set_font( 'din1451alt' )
+		pdf.set_font( 'din1451alt', '', 16 )
 		if logo:
 			x = text_margin
 			logo_rect = Rect( x, page_height-margin+page_y, (page_width - barcode_width_max)/2.0 - x, text_height )
@@ -296,13 +341,17 @@ def print_body_bib( participant, copies=2, onePage=False ):
 	)
 	
 def print_shoulder_bib( participant ):
-	license_holder = participant.license_holder
-	return print_bib_on_rect(
-		participant.bib,
-		None,
-		license_holder.first_last,
-		'CrossMgr',
-		3.9, 2.4, 2
+	#license_holder = participant.license_holder
+	#return print_bib_on_rect(
+	#	participant.bib,
+	#	None,
+	#	license_holder.first_last,
+	#	'CrossMgr',
+	#	3.9, 2.4, 1
+	#)
+	# Kludge to print single pakcage label change copies to 2 for normal shoulder bibs
+	return print_bib_package_label(
+		participant, 1
 	)
 
 #---------------------------------------------------------------------------------------------------------
